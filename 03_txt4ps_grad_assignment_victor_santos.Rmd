@@ -1,0 +1,45 @@
+---
+title: "Untitled"
+author: "Victor Matheus de Santana Santos"
+date: "2022-09-14"
+output: html_document
+---
+
+# ASSIGNMENT 03
+
+```{r setup, include=TRUE}
+
+knitr::opts_chunk$set(echo = TRUE)
+
+library(rvest)
+library(tidyr)
+library(dplyr)
+library(ggplot2)
+
+# Parte I
+
+url <- "https://pt.wikipedia.org/wiki/Lista_de_pa%C3%ADses_e_territ%C3%B3rios_da_Am%C3%A9rica_Latina_e_Caribe_por_PIB_(PPC)"
+
+am_lat <- read_html(url)
+
+tabela <- am_lat %>% html_nodes("table") %>% html_table()
+
+tabela_final <- tabela[[1]] %>% as.data.frame(tabela_final)
+
+# Parte II
+
+discursos_presidenciais <- c("", "http://www.biblioteca.presidencia.gov.br/", "https://presidente.gob.mx/temas/discurso-amlo/", "https://www.casarosada.gob.ar/informacion/discursos", "https://id.presidencia.gov.co/sala-de-prensa/discursos", "https://prensa.presidencia.cl/discursos.aspx", "https://www.gob.pe/institucion/presidencia/informes-publicaciones", "https://presidencia.gob.do/discursos", "https://www.presidencia.gob.ec/discursos/", "https://www.minrex.gob.cu/es/discursos-del-presidente-cubano", "https://prensa.gob.gt/discursos", "https://mppre.gob.ve/discursos/", "https://www.presidencia.gob.pa/Discursos-del-Presidente", "https://millercenter.org/the-presidency/presidential-speeches", "https://www.presidencia.go.cr/comunicados/category/discursos/", NA, NA, NA, "https://www.presidencia.gob.hn/#portfolio", "https://www.presidencia.gob.sv/category/discursos-del-presidente/", "https://otp.tt/category/news/messages-and-speeches/", NA, NA, "https://opm.gov.jm/speeches/", "https://op.gov.gy/index.php/category/speeches/", "https://opm.gov.bs/category/press-office/speeches/", "https://www.elysee.fr/recherche?prod_all_fr%5Bquery%5D=discours%20pr%C3%A9sident", "https://www.elysee.fr/recherche?prod_all_fr%5Bquery%5D=discours%20pr%C3%A9sident", NA, "https://www.gov.uk/search/news-and-communications?keywords=speech&order=relevance", "https://www.elysee.fr/recherche?prod_all_fr%5Bquery%5D=discours%20pr%C3%A9sident", "https://www.gov.uk/search/news-and-communications?keywords=speech&order=relevance", "https://pmo.gov.bb/category/speeches/", "https://millercenter.org/the-presidency/presidential-speeches", "https://www.government.nl/documents?keyword=&startdatum=&einddatum=&issue=All+topics&element=All+ministries&type=Speech", "https://www.government.nl/documents?keyword=&startdatum=&einddatum=&issue=All+topics&element=All+ministries&type=Speech", "https://millercenter.org/the-presidency/presidential-speeches", "https://www.pressoffice.gov.bz/speeches/", "https://www.govt.lc/speeches", NA, NA, "https://www.gov.uk/search/news-and-communications?keywords=speech&order=relevance", NA, "https://www.government.nl/documents?keyword=&startdatum=&einddatum=&issue=All+topics&element=All+ministries&type=Speech", "http://pmoffice.gov.vc/pmoffice/index.php/speeches", "https://www.elysee.fr/recherche?prod_all_fr%5Bquery%5D=discours%20pr%C3%A9sident", "https://www.gov.uk/search/news-and-communications?keywords=speech&order=relevance", "http://dominica.gov.dm/19-government-publications/130-speeches-addresses", "https://www.elysee.fr/recherche?prod_all_fr%5Bquery%5D=discours%20pr%C3%A9sident", "https://www.gov.uk/search/news-and-communications?keywords=speech&order=relevance", "https://www.government.nl/documents?keyword=&startdatum=&einddatum=&issue=All+topics&element=All+ministries&type=Speech", "https://www.gov.uk/search/news-and-communications?keywords=speech&order=relevance", "https://www.gov.uk/search/news-and-communications?keywords=speech&order=relevance", "https://www.government.nl/documents?keyword=&startdatum=&einddatum=&issue=All+topics&element=All+ministries&type=Speech", "https://www.government.nl/documents?keyword=&startdatum=&einddatum=&issue=All+topics&element=All+ministries&type=Speech")
+
+discursos_parlamentares <- c("", "https://www.camara.leg.br/sitcamaraws/SessoesReunioes.asmx/ListarDiscursosPlenario?", NA, "https://www.diputados.gov.ar/diputados/nabdaladem/discursos/", NA, "https://www.bcn.cl/historiapolitica/corporaciones/cuentas_publicas/detalle?tipo=parlamentarios", "https://www.congreso.gob.pe/participacion/museo/congreso/mensajes-presidenciales/?K=", NA, "https://www.congreso.es/busqueda?p_p_id=buscador&p_p_lifecycle=0", NA, NA, NA, NA, "https://www.congress.gov/congressional-record", NA, NA, NA, "https://parlamento.gub.uy/documentosyleyes/discursos", NA, NA, NA, NA, NA, NA, NA, NA, "https://www.assemblee-nationale.fr/dyn/16/comptes-rendus/seance", "https://www.assemblee-nationale.fr/dyn/16/comptes-rendus/seance", NA, "https://archives.parliament.uk/collections/search?s=speeches&qa%5Bkeyword_reference_type%5D=0&qa%5Btitle%5D=&qa%5Bperson%5D=&qa%5Bplace%5D=&qa%5Bsubject%5D=&qa%5Bformat%5D=&qa%5Bidentifier%5D=&qa%5Bdate_from%5D=&qa%5Bdate_to%5D=&cbav=2&cbadvsearchquery=", "https://www.assemblee-nationale.fr/dyn/16/comptes-rendus/seance", "https://archives.parliament.uk/collections/search?s=speeches&qa%5Bkeyword_reference_type%5D=0&qa%5Btitle%5D=&qa%5Bperson%5D=&qa%5Bplace%5D=&qa%5Bsubject%5D=&qa%5Bformat%5D=&qa%5Bidentifier%5D=&qa%5Bdate_from%5D=&qa%5Bdate_to%5D=&cbav=2&cbadvsearchquery=", NA, "https://www.congress.gov/congressional-record", "https://www.government.nl/documents?keyword=&startdatum=&einddatum=&issue=All+topics&element=All+ministries&type=Speech", "https://www.government.nl/documents?keyword=&startdatum=&einddatum=&issue=All+topics&element=All+ministries&type=Speech", "https://www.congress.gov/congressional-record", "https://www.nationalassembly.gov.bz/house-verbatim/", "https://parliament.govt.lc/publications/", NA, NA, "https://archives.parliament.uk/collections/search?s=speeches&qa%5Bkeyword_reference_type%5D=0&qa%5Btitle%5D=&qa%5Bperson%5D=&qa%5Bplace%5D=&qa%5Bsubject%5D=&qa%5Bformat%5D=&qa%5Bidentifier%5D=&qa%5Bdate_from%5D=&qa%5Bdate_to%5D=&cbav=2&cbadvsearchquery=", NA, "https://www.government.nl/documents?keyword=&startdatum=&einddatum=&issue=All+topics&element=All+ministries&type=Speech", NA, "https://www.assemblee-nationale.fr/dyn/16/comptes-rendus/seance", "https://archives.parliament.uk/collections/search?s=speeches&qa%5Bkeyword_reference_type%5D=0&qa%5Btitle%5D=&qa%5Bperson%5D=&qa%5Bplace%5D=&qa%5Bsubject%5D=&qa%5Bformat%5D=&qa%5Bidentifier%5D=&qa%5Bdate_from%5D=&qa%5Bdate_to%5D=&cbav=2&cbadvsearchquery=", NA, "https://www.assemblee-nationale.fr/dyn/16/comptes-rendus/seance", "https://archives.parliament.uk/collections/search?s=speeches&qa%5Bkeyword_reference_type%5D=0&qa%5Btitle%5D=&qa%5Bperson%5D=&qa%5Bplace%5D=&qa%5Bsubject%5D=&qa%5Bformat%5D=&qa%5Bidentifier%5D=&qa%5Bdate_from%5D=&qa%5Bdate_to%5D=&cbav=2&cbadvsearchquery=", "https://www.government.nl/documents?keyword=&startdatum=&einddatum=&issue=All+topics&element=All+ministries&type=Speech", "https://archives.parliament.uk/collections/search?s=speeches&qa%5Bkeyword_reference_type%5D=0&qa%5Btitle%5D=&qa%5Bperson%5D=&qa%5Bplace%5D=&qa%5Bsubject%5D=&qa%5Bformat%5D=&qa%5Bidentifier%5D=&qa%5Bdate_from%5D=&qa%5Bdate_to%5D=&cbav=2&cbadvsearchquery=", "https://archives.parliament.uk/collections/search?s=speeches&qa%5Bkeyword_reference_type%5D=0&qa%5Btitle%5D=&qa%5Bperson%5D=&qa%5Bplace%5D=&qa%5Bsubject%5D=&qa%5Bformat%5D=&qa%5Bidentifier%5D=&qa%5Bdate_from%5D=&qa%5Bdate_to%5D=&cbav=2&cbadvsearchquery=", "https://www.government.nl/documents?keyword=&startdatum=&einddatum=&issue=All+topics&element=All+ministries&type=Speech", "https://www.government.nl/documents?keyword=&startdatum=&einddatum=&issue=All+topics&element=All+ministries&type=Speech")
+
+tabela_final$Discursos_Presidenciais <- discursos_presidenciais
+
+tabela_final$Discursos_Parlamentares <- discursos_parlamentares
+
+library(rio)
+
+setwd("C:/Users/Victor/Documents/texto_como_dado/texto_como_dado/data")
+
+export(tabela_final, file = "tabela_final.xlsx")
+
+```
