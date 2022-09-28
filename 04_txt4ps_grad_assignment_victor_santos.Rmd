@@ -1,0 +1,53 @@
+---
+title: "04_txt4ps_grad_assignment_victor_santos"
+author: "Victor Matheus de Santana Santos"
+date: "2022-09-28"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+```{r echo = FALSE, warning=FALSE, message=FALSE}
+
+library(xml2)
+library(httr)
+library(rvest)
+library(tesseract)
+library(stringi)
+library(stringr)
+library(pdftools)
+library(scales)
+library(topicmodels)
+library(readtext)
+library(quanteda)
+library(quanteda.textplots)
+library(quanteda.textstats)
+library(quanteda.textmodels)
+library(tidytext)
+library(dplyr)
+library(ggplot2)
+library(here)
+
+load(here("./data/impeachment-dilma-dados-filter.rda"))
+
+impeachment_dfm <- impeachment_dilma %>% filter(partido == c("PT", "PSDB")) %>%
+mutate(text = stri_trans_general(text, "Latin-ASCII")) %>%
+mutate(text = str_remove_all(text, "[[:digit:]]")) %>%
+corpus(docid_field = "doc_id", text_field = "text") %>%
+tokens(remove_punct = TRUE) %>%
+tokens_tolower() %>%
+tokens_remove(stopwords(source = "stopwords-iso", language = "pt"), min_nchar = 2) %>%
+tokens_wordstem(language = "pt") %>%
+dfm() %>%
+dfm_select(pattern = c("sr", "total", "deput", "vot", "president", "bet",
+                      "mansur", "palm"),  selection = "remove") %>%
+dfm_trim(min_docfreq = 0.01, docfreq_type = "prop")
+
+impeachment_dfm_group <- dfm_group(impeachment_dfm, groups = partido)
+
+set.seed(132)
+textplot_wordcloud(impeachment_dfm_group, comparison = TRUE, max_words = 200)
+
+```
